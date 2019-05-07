@@ -64,10 +64,18 @@ const updateRow = (id, data) => database.query(SQL`
     *;
 `);
 
+const deleteRow = id => database.query(SQL`
+  DELETE FROM
+    users
+  WHERE
+    id = ${id};
+`);
+
 module.exports = {
   createTable,
   createRow,
   getRows,
   getRow,
-  updateRow
+  updateRow, 
+  deleteRow
 };
