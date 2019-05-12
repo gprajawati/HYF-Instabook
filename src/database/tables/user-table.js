@@ -14,7 +14,7 @@ const createTable = () => database.query(`
     );
 `);
 
-const createRow = data => database.query(SQL`
+const createRow = async data => (await database.query(SQL`
   INSERT INTO
     users
     (
@@ -27,32 +27,28 @@ const createRow = data => database.query(SQL`
       ${data.firstName},
       ${data.lastName},
       ${data.email}
-    );
-`);
+    )
+  RETURNING
+    *;
+`))[0] || null;
 
 const getRows = () => database.query(`
   SELECT
-    id,
-    first_name,
-    last_name,
-    email
+    *
   FROM
     users;
 `);
 
-const getRow = id => database.query(SQL`
+const getRow = async id => (await database.query(SQL`
   SELECT
-    id,
-    first_name,
-    last_name,
-    email
+    *
   FROM
     users
   WHERE
     id = ${id};
-`);
+`))[0] || null;
 
-const updateRow = (id, data) => database.query(SQL`
+const updateRow = async (id, data) => (await database.query(SQL`
   UPDATE
     users
   SET
@@ -62,7 +58,7 @@ const updateRow = (id, data) => database.query(SQL`
     id = ${id}
   RETURNING
     *;
-`);
+`))[0] || null;
 
 const deleteRow = id => database.query(SQL`
   DELETE FROM
@@ -76,6 +72,6 @@ module.exports = {
   createRow,
   getRows,
   getRow,
-  updateRow, 
+  updateRow,
   deleteRow
 };
